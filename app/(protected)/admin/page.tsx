@@ -40,7 +40,6 @@ const AdminPage = () => {
         <RoleGate allowedRole={UserRole.ADMIN}>
           <FormSucess message="You are allowed to see this content!" />
         </RoleGate>
-
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
           <p className="text-sm font-medium">Admin-only API route</p>
           <Button onClick={onApiRouteClick}>Click to test</Button>

@@ -1,6 +1,6 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { UserRole } from "@prisma/client";
+import { Gender, UserRole } from "@prisma/client";
 
 import { getUserById } from "@/data/user";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
@@ -42,12 +42,12 @@ export const {
           existingUser.id
         );
 
-        if (!twoFactorConfirmation) return false;
+        // if (!twoFactorConfirmation) return false;
 
-        // Delete two factor confirmation for next sign in
-        await db.twoFactorConfirmation.delete({
-          where: { id: twoFactorConfirmation.id },
-        });
+        // // Delete two factor confirmation for next sign in
+        // await db.twoFactorConfirmation.delete({
+        //   where: { id: twoFactorConfirmation.id },
+        // });
       }
 
       return true;
@@ -64,8 +64,16 @@ export const {
       if (session.user) {
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
         session.user.name = token.name;
-        session.user.email = token.email;
+        session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
+
+        session.user.gender = token.gender as Gender;
+        session.user.birthDate = token.birthDate as Date;
+        session.user.firstName = token.firstName as string;
+        session.user.middleName = token.middleName as string;
+        session.user.lastName = token.lastName as string;
+        session.user.jobTitle = token.jobTitle as string;
+
       }
 
       return session;
@@ -80,7 +88,16 @@ export const {
       const existingAccount = await getAccountByUserId(existingUser.id);
 
       token.isOAuth = !!existingAccount;
-      token.name = existingUser.name;
+      token.firstName = existingUser.firstName;
+      token.middleName = existingUser.middleName;
+      token.lastName = existingUser.lastName;
+
+      token.name = `${existingUser.firstName} ${existingUser.middleName} ${existingUser.lastName}`;
+
+      token.gender = existingUser.gender;
+      token.birthDate = existingUser.dateOfBirth;
+      token.jobTitle = existingUser.jobTitle;
+
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;

@@ -3,7 +3,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     <div
       className="
           h-full flex items-center justify-center
-          bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-neutral-900 via-neutral-600 to-neutral-900
+          bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-violet-900 via-purple-600 to-violet-900
         "
     >
       {children}

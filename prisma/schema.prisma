@@ -4,19 +4,37 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 enum UserRole {
   ADMIN
   USER
+  SUPERADMIN
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+
 model User {
-  id                      String                 @id @default(auto()) @map("_id") @db.ObjectId
-  name                    String?
+  id String @id @default(cuid())
+  firstName               String?
+  middleName              String?
+  lastName                String?
+  gender                  Gender?
+  dateOfBirth             DateTime?
+  jobTitle                String?
   email                   String?                @unique
+
+  createdAt               DateTime?              @default(now())
+  updatedAt               DateTime?              @updatedAt
+  
+  // default
   emailVerified           DateTime?
   image                   String?
   password                String?
@@ -24,21 +42,23 @@ model User {
   accounts                Account[]
   isTwoFactorEnabled      Boolean                @default(false)
   twoFactorConfirmation   TwoFactorConfirmation?
-  twoFactorConfirmationId String?                @db.ObjectId
+  twoFactorConfirmationId String?    
+  address                 AddressLine?
 }
 
+
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
+  id String @id @default(cuid())
+  userId            String   
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
+  refresh_token     String? 
+  access_token      String? 
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.String
+  id_token          String? 
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -47,7 +67,7 @@ model Account {
 }
 
 model VerificationToken {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(cuid())
   email   String
   token   String   @unique
   expires DateTime
@@ -56,7 +76,7 @@ model VerificationToken {
 }
 
 model PasswordResetToken {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(cuid())
   email   String
   token   String   @unique
   expires DateTime
@@ -65,7 +85,7 @@ model PasswordResetToken {
 }
 
 model TwoFactorToken {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(cuid())
   email   String
   token   String   @unique
   expires DateTime
@@ -74,10 +94,25 @@ model TwoFactorToken {
 }
 
 model TwoFactorConfirmation {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(cuid())
 
-  userId String @db.ObjectId
+  userId String 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId])
+}
+
+model AddressLine {
+  id String @id @default(cuid())
+  street       String?
+  barangay     String?
+  city         String?
+  province     String?
+  country      String?
+  zipCode      String?
+
+  createdAt    DateTime? @default(now())  
+  userId       String
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@unique([userId])
 }

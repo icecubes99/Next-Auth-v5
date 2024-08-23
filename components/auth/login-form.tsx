@@ -51,17 +51,17 @@ const LoginForm = () => {
     setSuccess("");
 
     startTransition(() => {
-      login(values, callbackUrl )
+      login(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset();
             setError(data?.error);
           }
 
-          if (data?.success) {
-            form.reset();
-            setSuccess(data?.success);
-          }
+          // if (data?.success) {
+          //   form.reset();
+          //   setSuccess(data?.success);
+          // }
 
           if (data?.twoFactor) {
             setShowTwoFactor(true);
@@ -76,7 +76,7 @@ const LoginForm = () => {
       headerLabel="Welcome back"
       backButtonLabel="Don't have an account?"
       backButtonHref="/auth/register"
-      showSocial
+
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -157,7 +157,7 @@ const LoginForm = () => {
           </div>
           <FormError message={error || urlError} />
           <FormSucess message={success} />
-          <Button disabled={isPending} type="submit" className="w-full">
+          <Button variant={"auth"} disabled={isPending} type="submit" className="w-full">
             {showTwoFactor ? "Confirm" : "Login"}
           </Button>
         </form>

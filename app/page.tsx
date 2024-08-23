@@ -14,7 +14,7 @@ export default function Home() {
     <main
       className="
         flex h-full flex-col items-center justify-center
-        bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-neutral-900 via-neutral-600 to-neutral-900        
+        bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-purple-900 via-violet-600 to-purple-900        
       "
     >
       <div className="space-y-6 text-center">
@@ -24,9 +24,9 @@ export default function Home() {
             font.className
           )}
         >
-          🔐 Auth
+          Kupler Industries Incorporated
         </h1>
-        <p className="text-white text-lg">A simple authentication service</p>
+        <p className="text-white text-lg">Employee Management System</p>
 
         <div>
           <LoginButton mode="modal" asChild>
